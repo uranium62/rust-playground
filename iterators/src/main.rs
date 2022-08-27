@@ -3,6 +3,7 @@ fn main() {
     iter2();
     iter3();
     iter4();
+    iter5();
 }
 
 fn iter1() {
@@ -39,5 +40,32 @@ fn iter4() {
     let output = cycled.take(9).collect::<Vec<&usize>>();
 
     println!("{:?}", output);
+}
 
+fn iter5(){
+    let collection = vec![1, 2, 3, 4, 5];
+
+    let iter = MyIter { slice: &collection[..] };
+    for item in iter {
+        println!("{:?}", item);
+    }
+
+
+}
+
+struct MyIter<'a, T> {
+    slice: &'a [T]
+}
+
+impl<'a, T> Iterator for MyIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.slice.is_empty() {
+            return None;
+        }
+        let elem = self.slice.get(0);
+        self.slice = &self.slice[1..];
+        elem
+    }
 }
